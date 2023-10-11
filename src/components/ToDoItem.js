@@ -25,7 +25,7 @@ if(props.todo.done){
     itemHTML = (<>
 
     <span className='done'>{props.todo.text} </span>
-    <span className='float-end '>&#128077;</span>
+    <span onClick= {() => props.markAsDone(props.todo.id)} className='float-end '>&#128077;</span>
     <Button
                 onClick={() => props.deleteTodo(props.todo.id)}
                 variant="danger"

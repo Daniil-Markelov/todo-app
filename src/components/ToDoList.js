@@ -44,7 +44,7 @@ let initialList = [
     const markAsDone = (id) => {
         const newList = list.map((item) => {
             if (item.id === id) {
-                item.done =true;
+                item.done = !item.done;
             }
             return item;
         });
