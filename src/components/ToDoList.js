@@ -2,6 +2,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 //import Col from  'react-bootstrap/Col';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ToDoItem from './ToDoItem';
 const TodoList = () => {
@@ -15,21 +16,29 @@ let initialList = [
 ];
 
     const [list, setList] = useState(initialList);
-    const [textInput, setTextInput] = useState(initialList);
+    const [textInput, setTextInput] = useState('');
+
+    const saveToDosToLocalStorage = (updatedList) => {
+    localStorage.setItem('todos', JSON.stringify(updatedList));
+};
 
     const handleTextInput =(e) => {
         setTextInput (e.target.value);
-    }
+    };
     const addTodo = () => {
         let newTodo = {
             id: list.length + 1,
             text: textInput,
             done: false,
             deleted: false,
+            
         };
 
-        setList([...list, newTodo]);
+        const updatedList = [...list, newTodo];
+        setList(updatedList);
+        saveToDosToLocalStorage(updatedList);
         setTextInput('');
+        
     };
 
     const markAsDone = (id) => {
@@ -41,6 +50,7 @@ let initialList = [
         });
 
         setList(newList);
+        saveToDosToLocalStorage(newList);
     };
     const deleteTodo = (id) => {
         const newList = list.map((item) => {
@@ -50,14 +60,25 @@ let initialList = [
                     return item;
                 });
                 setList(newList);
+                saveToDosToLocalStorage(newList);
+                
             };
 
-            let todoItems = list.filter((item) => !item.deleted) .map((item) =>{
+            let todoItems = list.filter((item) => !item.deleted).map((item) =>{
 
         
         return (<ToDoItem key={item.id} todo={item} markAsDone={markAsDone} deleteTodo={deleteTodo} />
         );
     });
+
+    
+    useEffect(() => {
+
+        const ToDosFromLocalStorage = JSON.parse(localStorage.getItem('todos'));
+        if (ToDosFromLocalStorage) {
+          setList(ToDosFromLocalStorage);
+        }
+      }, []);
 
     return (
         <Card>
@@ -68,7 +89,7 @@ let initialList = [
                 </ListGroup>
             </Card.Body>
             <Card.Footer>
-            <input type='text' onChange={handleTextInput}/>
+            <input type='text' value={textInput} onChange={handleTextInput}/>
             <Button variant='primary' onClick={addTodo}> Add</Button>
 
             </Card.Footer>
