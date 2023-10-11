@@ -1,16 +1,16 @@
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import Col from  'react-bootstrap/Col';
+//import Col from  'react-bootstrap/Col';
 import { useState } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ToDoItem from './ToDoItem';
 const TodoList = () => {
 
 let initialList = [
-    {id:1, text: 'clean the gaff', done :true},
-    {id:2, text: 'Buy Milk', done :true},
-    {id:3, text: 'Create todo app in React', done :false},
-    {id:4, text: 'Create todo app in React', done :false},
+    {id:1, text: 'clean the gaff', done :true, deleted : false},
+    {id:2, text: 'Buy Milk', done :true, deleted : false},
+    {id:3, text: 'Create todo app in React', done :false, deleted : false},
+
 
 ];
 
@@ -20,10 +20,43 @@ let initialList = [
     const handleTextInput =(e) => {
         setTextInput (e.target.value);
     }
+    const addTodo = () => {
+        let newTodo = {
+            id: list.length + 1,
+            text: textInput,
+            done: false,
+            deleted: false,
+        };
 
+        setList([...list, newTodo]);
+        setTextInput('');
+    };
 
-    let todoItems = list.map((item) =>{
-        return <ToDoItem todo={item}/>
+    const markAsDone = (id) => {
+        const newList = list.map((item) => {
+            if (item.id === id) {
+                item.done =true;
+            }
+            return item;
+        });
+
+        setList(newList);
+    };
+    const deleteTodo = (id) => {
+        const newList = list.map((item) => {
+                    if (item.id === id) {
+                        item.deleted =true;
+                    }
+                    return item;
+                });
+                setList(newList);
+            };
+
+            let todoItems = list.filter((item) => !item.deleted) .map((item) =>{
+
+        
+        return (<ToDoItem key={item.id} todo={item} markAsDone={markAsDone} deleteTodo={deleteTodo} />
+        );
     });
 
     return (
@@ -36,8 +69,8 @@ let initialList = [
             </Card.Body>
             <Card.Footer>
             <input type='text' onChange={handleTextInput}/>
+            <Button variant='primary' onClick={addTodo}> Add</Button>
 
-<Button variant='primary' className='float-end'> Add</Button>
             </Card.Footer>
 
         </Card>
