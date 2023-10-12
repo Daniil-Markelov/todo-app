@@ -7,6 +7,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import ToDoItem from './ToDoItem';
 const TodoList = () => {
 
+
+
 let initialList = [
     {id:1, text: 'clean the gaff', done :true, deleted : false},
     {id:2, text: 'Buy Milk', done :true, deleted : false},
@@ -15,12 +17,22 @@ let initialList = [
 
 ];
 
+let localList = JSON.parse(localStorage.getItem('todos'));
+
+if (localList){
+    initialList = localList;
+}
+
     const [list, setList] = useState(initialList);
     const [textInput, setTextInput] = useState('');
 
-    const saveToDosToLocalStorage = (updatedList) => {
-    localStorage.setItem('todos', JSON.stringify(updatedList));
-};
+useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(list));
+}, [list]);
+
+   // const saveToDosToLocalStorage = (updatedList) => {
+   //localStorage.setItem('todos', JSON.stringify(updatedList));
+//};
 
     const handleTextInput =(e) => {
         setTextInput (e.target.value);
@@ -35,8 +47,9 @@ let initialList = [
         };
 
         const updatedList = [...list, newTodo];
-        setList(updatedList);
-        saveToDosToLocalStorage(updatedList);
+       setList(updatedList);
+     //   saveToDosToLocalStorage(updatedList);
+
         setTextInput('');
         
     };
@@ -50,8 +63,21 @@ let initialList = [
         });
 
         setList(newList);
-        saveToDosToLocalStorage(newList);
+       //saveToDosToLocalStorage(newList);
     };
+
+
+
+    //const deleteTodo = (id) => {
+ // const newList =list.filter((item) => {
+
+ // return item.id !== id;
+
+ // });
+ 
+ // setList(newList);
+//}
+
     const deleteTodo = (id) => {
         const newList = list.map((item) => {
                     if (item.id === id) {
@@ -60,9 +86,18 @@ let initialList = [
                     return item;
                 });
                 setList(newList);
-                saveToDosToLocalStorage(newList);
+
+                //saveToDosToLocalStorage(newList);
+                //localStorage.removeItem(id);
                 
             };
+
+            const handleKeyUp = (e) => {
+                if (e.key === 'Enter') {
+                                    addTodo();
+                                }
+                            };
+
 
             let todoItems = list.filter((item) => !item.deleted).map((item) =>{
 
@@ -72,29 +107,31 @@ let initialList = [
     });
 
     
-    useEffect(() => {
+    //useEffect(() => {
 
-        const ToDosFromLocalStorage = JSON.parse(localStorage.getItem('todos'));
-        if (ToDosFromLocalStorage) {
-          setList(ToDosFromLocalStorage);
-        }
-      }, []);
+    //    const ToDosFromLocalStorage = JSON.parse(localStorage.getItem('todos'));
+     //   if (ToDosFromLocalStorage) {
+     //     setList(ToDosFromLocalStorage);
+     //   }
+   //   }, []);
 
     return (
         <Card>
-            <Card.Header>ToDoList</Card.Header>
+            <Card.Header>To Do List</Card.Header>
             <Card.Body>
                 <ListGroup>
                 {todoItems}
                 </ListGroup>
             </Card.Body>
             <Card.Footer>
-            <input type='text' value={textInput} onChange={handleTextInput}/>
-            <Button variant='primary' onClick={addTodo}> Add</Button>
+            <input className='m-3' type='text' value={textInput} onChange={handleTextInput} onKeyUp={handleKeyUp} />
+            <Button  variant='primary' onClick={addTodo}> Add</Button>
 
             </Card.Footer>
 
         </Card>
+
+        
     );
 };
 export default TodoList;

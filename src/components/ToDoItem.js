@@ -7,7 +7,7 @@ const ToDoItem = (props) => {
 let itemHTML = (<>
 
 {props.todo.text}
-       <Badge onClick= {() => props.markAsDone(props.todo.id)} pill bg='success ' className='float-end'>❗ </Badge> 
+       <Badge onClick= {() => props.markAsDone(props.todo.id)} pill bg='danger ' className='float-end'>&#128337;</Badge> 
               
                           <Button
                 onClick={() => props.deleteTodo(props.todo.id)}
@@ -25,7 +25,7 @@ if(props.todo.done){
     itemHTML = (<>
 
     <span className='done'>{props.todo.text} </span>
-    <span onClick= {() => props.markAsDone(props.todo.id)} className='float-end '>&#128077;</span>
+    <Badge onClick= {() => props.markAsDone(props.todo.id)} pill bg='success ' className='float-end '>&#128077;</Badge>
     <Button
                 onClick={() => props.deleteTodo(props.todo.id)}
                 variant="danger"

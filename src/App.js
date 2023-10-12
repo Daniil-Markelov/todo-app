@@ -7,9 +7,13 @@ import Col from  'react-bootstrap/Col';
 function App() {
   return (
     <Container className="mr-5">
-<Row>
-          <Col>
-        <h1>Hello from app</h1>
+
+
+       <Row className="text-center m-5">
+          <h1>My To Do List</h1>
+        </Row>  
+       <Row>
+    <Col> 
     <TodoList/>
     </Col>
 
